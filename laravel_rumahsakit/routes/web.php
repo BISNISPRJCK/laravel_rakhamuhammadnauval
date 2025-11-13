@@ -1,7 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RumahSakitController;
+use App\Http\Controllers\PasienController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('rumahsakit', RumahSakitController::class)->except(['create', 'edit', 'show', 'update']);
+    Route::resource('pasien', PasienController::class)->except(['create', 'edit', 'show', 'update']);
 });
